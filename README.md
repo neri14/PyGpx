@@ -1,1 +1,4 @@
 # PyGpx
+## dependencies 
+- lxml
+- matplotlib
