@@ -29,11 +29,11 @@ def main():
 
     args = parser.parse_args()
 
-    window = args.running_avg_window
+    window = int(args.running_avg_window)
     if window % 2 > 0:
         window = window + 1
 
-    handler = GpxHandler(args.gpx_file, window, args.hysteresis)
+    handler = GpxHandler(args.gpx_file, window, float(args.hysteresis))
     plot((handler.get_errors(),          'errors'),
          (handler.get_running_average(), 'running average'),
          (handler.get_gated_errors(),    'gated errors'))
