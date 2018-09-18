@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 
 
-def plot(*data):
-    for d in data:
-        plt.plot(d)
+def plot(*figures):
+    for (data, label) in figures:
+        plt.plot(data, label=label)
+    plt.legend()
     plt.show()

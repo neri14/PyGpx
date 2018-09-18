@@ -1,4 +1,5 @@
 import argparse
+import os
 from gpx_handler import GpxHandler
 from plotter import plot
 
@@ -28,9 +29,25 @@ def main():
 
     args = parser.parse_args()
 
-    handler = GpxHandler(args.gpx_file, args.running_avg_window, args.hysteresis)
-    print("Gated errors values change " + str(get_value_change_count(handler.get_gated_errors())) + " times")
-    plot(handler.get_errors(), handler.get_running_average(), handler.get_gated_errors())
+    window = args.running_avg_window
+    if window % 2 > 0:
+        window = window + 1
+
+    handler = GpxHandler(args.gpx_file, window, args.hysteresis)
+    plot((handler.get_errors(),          'errors'),
+         (handler.get_running_average(), 'running average'),
+         (handler.get_gated_errors(),    'gated errors'))
+    output_filename = os.path.splitext(args.gpx_file)[0] + ".fixed.gpx"
+
+    errors_before = handler.get_errors()
+
+    handler.fix()
+
+    errors_after = handler.get_errors()
+    plot((errors_before, 'errors before'),
+         (errors_after,  'errors after'))
+
+    handler.write(output_filename)
 
 
 if __name__ == "__main__":
